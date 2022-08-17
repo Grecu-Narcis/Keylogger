@@ -1,5 +1,5 @@
 # Keylogger
-Implemented a simple keylogger and hope to constantly update it with ideas.
+Implemented a simple keylogger and constantly update it with future ideas.
 
 Tasks</br>
 <ul>
