@@ -1,4 +1,4 @@
-# local-keylogger
+# Keylogger
 Implemented a simple keylogger and hope to constantly update it with ideas.
 
 Tasks</br>
